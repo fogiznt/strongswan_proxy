@@ -29,9 +29,13 @@ docker build /root/strong_proxy/strongswan_proxy-main/docker/
 echo -e "${BLUE}Введите IMAGE ID последнего (самого верхнего в списке) сформированного образа${DEFAULT}"
 docker images
 read image_id
+echo "$image_id" > ./image_id.txt
+echo -e "${BLUE}Введите время ожидания перед отключением прокси${DEFAULT}"
+read wait_time
+echo "$wait_time" > ./wait_time.txt
 #image_id=$(docker images | tail -n -1)
 #image_id=$(echo ${image_id##*>} | cut -b -12)
-echo "$image_id" > ./image_id.txt
+
 server_ip=$(curl check-host.net/ip)
 echo "$server_ip" > ./server_ip.txt
 echo -e "${BLUE}Введите домен или ip сервера${DEFAULT}"
