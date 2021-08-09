@@ -37,6 +37,7 @@ echo -e "${BLUE}Введите диапазон портов сервера\nК 
 read proxy_port_range
 echo "$proxy_port_range" > ./proxy_port_range.txt
 wget https://raw.githubusercontent.com/fogiznt/strongswan_proxy/main/proxy_manager.sh
+chmod +x ./proxy_manager.sh
 echo "    leftupdown=/root/strong_proxy/proxy_manager.sh" >> /etc/ipsec.conf
 
 cd /var/www/html/
