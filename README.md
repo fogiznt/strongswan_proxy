@@ -12,7 +12,7 @@
 Эти значения всегда можно поменять в файлах /root/strong_proxy  
 /root/strong_proxy/image_id.txt - имя образа  
 /root/strong_proxy/domain_name.txt - домен или ip прокси  
-/root/strong_proxy/proxy_port_range.txt.txt - диапазон портов прокси  
+/root/strong_proxy/proxy_port_range.txt - диапазон портов прокси  
 
 ``` 
 cd ~
