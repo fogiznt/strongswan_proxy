@@ -1,4 +1,4 @@
-Нстройка прокси в паре со strongswan_vpn Ubuntu 18.04.5  
+Настройка прокси в паре со strongswan_vpn Ubuntu 18.04.5  
 Этот скрипт используется после настройки сервера strongswan_vpn  
 
 Цепочка такая  
@@ -14,7 +14,7 @@
 /root/strong_proxy/domain_name.txt - домен или ip прокси  
 /root/strong_proxy/proxy_port_range.txt - диапазон портов прокси  
 
-#Команды установки  
+Команды установки  
 ``` 
 cd ~
 wget https://raw.githubusercontent.com/fogiznt/strongswan_proxy/main/proxy_install.sh
