@@ -23,7 +23,7 @@ netfilter-persistent-save
 mkdir /root/strong_proxy
 cd /root/strong_proxy
 wget https://github.com/fogiznt/strongswan_proxy/archive/refs/heads/main.zip
-uzip main.zip
+unzip main.zip
 docker build /root/strong_proxy/strongswan_proxy-main/docker/
 #### Получение основыных переменных - id образа докер, адрес и порты прокси
 echo -e "${BLUE}Введите IMAGE ID последнего (самого верхнего в списке) сформированного образа${DEFAULT}"
