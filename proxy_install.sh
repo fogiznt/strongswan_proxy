@@ -25,8 +25,12 @@ cd /root/strong_proxy
 wget https://github.com/fogiznt/strongswan_proxy/archive/refs/heads/main.zip
 uzip main.zip
 docker build /root/strong_proxy/strongswan_proxy-main/docker/
-image_id=$(docker images | tail -n -1)
-image_id=$(echo ${image_id##*>} | cut -b -12)
+#### Получение основыных переменных - id образа докер, адрес и порты прокси
+echo -e "${BLUE}Введите IMAGE ID последнего (самого верхнего в списке) сформированного образа${DEFAULT}"
+docker images
+read image_id
+#image_id=$(docker images | tail -n -1)
+#image_id=$(echo ${image_id##*>} | cut -b -12)
 echo "$image_id" > ./image_id.txt
 server_ip=$(curl check-host.net/ip)
 echo "$server_ip" > ./server_ip.txt
@@ -36,10 +40,12 @@ echo "$server_domain" > ./domain_name.txt
 echo -e "${BLUE}Введите диапазон портов сервера\nК примеру - 10000-10298${DEFAULT}"
 read proxy_port_range
 echo "$proxy_port_range" > ./proxy_port_range.txt
+#### Загрузка управляющего скрипта
 wget https://raw.githubusercontent.com/fogiznt/strongswan_proxy/main/proxy_manager.sh
 chmod +x ./proxy_manager.sh
 echo "    leftupdown=/root/strong_proxy/proxy_manager.sh" >> /etc/ipsec.conf
-
+systemctl restart strongswan.service 
+#### Настройка apache2
 cd /var/www/html/
 touch clients
 rm index.html
