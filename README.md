@@ -14,6 +14,7 @@
 /root/strong_proxy/domain_name.txt - домен или ip прокси  
 /root/strong_proxy/proxy_port_range.txt - диапазон портов прокси  
 
+##Команды для установки  
 ``` 
 cd ~
 wget https://raw.githubusercontent.com/fogiznt/strongswan_proxy/main/proxy_install.sh
