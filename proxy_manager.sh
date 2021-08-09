@@ -5,6 +5,7 @@ b=$(tail -n 10 /var/log/syslog | grep -o "deleting IKE_SA ikev2-vpn")
 
 if [ "$a" = "assigning virtual IP 10.10.10" ]; then
 a=$(tail -n 5 /var/log/syslog | grep "assigning virtual IP 10.10.10")
+server_ip=$(cat /root/strong_proxy/server_ip.txt)
 client_ip=$(tail -n 10 /var/log/syslog | grep "established between $server_ip" | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}")
 client_ip=$(echo $client_ip | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | grep -v "$server_ip")
 server_domain=$(cat /root/strong_proxy/domain_name.txt)
