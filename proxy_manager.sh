@@ -4,13 +4,14 @@ b=$(tail -n 10 /var/log/syslog | grep -o "deleting IKE_SA ikev2-vpn")
 
 
 if [ "$a" = "assigning virtual IP 10.10.10" ]; then
-a=$(tail -n 5 /var/log/syslog | grep "assigning virtual IP 10.10.10")
+a=$(tail -n 10 /var/log/syslog | grep "assigning virtual IP 10.10.10")
 server_ip=$(cat /root/strong_proxy/server_ip.txt)
 client_ip=$(tail -n 10 /var/log/syslog | grep "established between $server_ip" | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}")
 client_ip=$(echo $client_ip | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | grep -v "$server_ip")
 server_domain=$(cat /root/strong_proxy/domain_name.txt)
 image_id=$(cat /root/strong_proxy/image_id.txt)
 user=$client_ip
+wait_time=$(cat /root/strong_proxy/wait_time.txt)
 ip=$(echo $a | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}")
 local_port=$(shuf -i 7000-7255 -n 1)
 proxy_port=$(cat /root/strong_proxy/proxy_port_range.txt)
@@ -35,7 +36,8 @@ $client_ip>>$ip:$local_port>>$server_domain:$proxy_port
 EOF
 
 elif [ "$b" = "deleting IKE_SA ikev2-vpn" ]; then
-client_ip=$(tail -n 5 /var/log/syslog | grep "deleting IKE_SA ikev2-vpn" | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | grep -v "$server_ip")
+server_ip=$(cat /root/strong_proxy/server_ip.txt)
+client_ip=$(tail -n 10 /var/log/syslog | grep "deleting IKE_SA ikev2-vpn" | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | grep -v "$server_ip")
 user=$client_ip
 sed -i '2d' /root/strong_proxy/killproxy_$user
 
