@@ -1,0 +1,16 @@
+base {
+  log_debug = off;
+  log_info = on;
+  log = "stderr";
+  daemon = off;
+  redirector = iptables;
+}
+
+redsocks {
+  local_ip = ${ip};
+  local_port = ${port};
+
+  type = socks5;
+  ip = ${proxy_ip};
+  port = ${proxy_port};
+}
