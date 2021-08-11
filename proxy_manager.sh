@@ -40,7 +40,8 @@ $client_ip>>$ip:$local_port>>$server_domain:$proxy_port
 EOF
 
 elif [ "$b" = "deleting IKE_SA ikev2-vpn" ]; then
-server_ip=$(cat /root/strong_proxy/server_ip.txt)
+server_ip=$(sed -n 3p /root/strong_proxy/settings.txt)
+server_ip=${server_ip##*=}
 client_ip=$(tail -n 10 /var/log/syslog | grep "deleting IKE_SA ikev2-vpn" | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | grep -v "$server_ip")
 user=$client_ip
 sed -i '2d' /root/strong_proxy/killproxy_$user
