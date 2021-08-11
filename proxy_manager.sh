@@ -22,7 +22,7 @@ iptables -t nat -I PREROUTING 1 -s $ip -p tcp -j REDIRECT --to-ports $local_port
 touch /root/strong_proxy/killproxy_$user
 cat >>/root/strong_proxy/killproxy_$user << EOF
 #!/bin/sh
-sleep 90
+sleep $wait_time
 docker kill $user
 docker rm $user
 iptables -t nat -D PREROUTING -s $ip -p tcp -j REDIRECT --to-ports $local_port
