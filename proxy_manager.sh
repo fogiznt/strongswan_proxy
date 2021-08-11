@@ -5,15 +5,20 @@ b=$(tail -n 10 /var/log/syslog | grep -o "deleting IKE_SA ikev2-vpn")
 
 if [ "$a" = "assigning virtual IP 10.10.10" ]; then
 a=$(tail -n 10 /var/log/syslog | grep "assigning virtual IP 10.10.10")
-server_ip=$(cat /root/strong_proxy/server_ip.txt)
+server_ip=$(sed -n 3p /root/strong_proxy/settings.txt)
+server_ip=${server_ip##*=}
 client_ip=$(tail -n 15 /var/log/syslog | grep "established between $server_ip" | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | grep -v "$server_ip")
-server_domain=$(cat /root/strong_proxy/domain_name.txt)
-image_id=$(cat /root/strong_proxy/image_id.txt)
+server_domain=$(sed -n 4p /root/strong_proxy/settings.txt)
+server_domain=${server_domain##*=}
+image_id=$(sed -n 1p /root/strong_proxy/settings.txt)
+image_id=${image_id##*=}
 user=$client_ip
-wait_time=$(cat /root/strong_proxy/wait_time.txt)
+wait_time=$(sed -n 2p /root/strong_proxy/settings.txt)
+wait_time=${wait_time##*=}
 ip=$(echo $a | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}")
 local_port=$(shuf -i 7000-7255 -n 1)
-proxy_port=$(cat /root/strong_proxy/proxy_port_range.txt)
+proxy_port=$(sed -n 5p /root/strong_proxy/settings.txt)
+proxy_port=${proxy_port##*=}
 proxy_port=$(shuf -i $proxy_port -n 1)
 
 docker run --name $user -d --net=host --privileged -e socks5 $image_id -a 0.0.0.0 -p $local_port -t $server_domain:$proxy_port
