@@ -22,6 +22,8 @@ netfilter-persistent-save
 ### Формирование образа Docker
 mkdir /root/strong_proxy
 cd /root/strong_proxy
+touch /root/strong_proxy/settings.txt
+chmod 666 /root/strong_proxy/settings.txt
 wget https://github.com/fogiznt/strongswan_proxy/archive/refs/heads/main.zip
 unzip main.zip
 chmod -R 777 /root/strong_proxy/strongswan_proxy-main/docker
@@ -30,21 +32,19 @@ docker build /root/strong_proxy/strongswan_proxy-main/docker/
 echo -e "${BLUE}Введите IMAGE ID последнего (самого верхнего в списке) сформированного образа${DEFAULT}"
 docker images
 read image_id
-echo "$image_id" > ./image_id.txt
+echo "image_id=$image_id" >> /root/strong_proxy/settings.txt
 echo -e "${BLUE}Введите время ожидания перед отключением прокси${DEFAULT}"
 read wait_time
-echo "$wait_time" > ./wait_time.txt
-#image_id=$(docker images | tail -n -1)
-#image_id=$(echo ${image_id##*>} | cut -b -12)
+echo "wait_time=$wait_time" >> /root/strong_proxy/settings.txt
 
 server_ip=$(curl check-host.net/ip)
-echo "$server_ip" > ./server_ip.txt
+echo "server_ip=$server_ip" >> /root/strong_proxy/settings.txt
 echo -e "${BLUE}Введите домен или ip сервера${DEFAULT}"
 read server_domain
-echo "$server_domain" > ./domain_name.txt
+echo "server_domain=$server_domain" >> /root/strong_proxy/settings.txt
 echo -e "${BLUE}Введите диапазон портов сервера\nК примеру - 10000-10298${DEFAULT}"
 read proxy_port_range
-echo "$proxy_port_range" > ./proxy_port_range.txt
+echo "proxy_port_range=$proxy_port_range" >> /root/strong_proxy/settings.txt
 #### Загрузка управляющего скрипта
 wget https://raw.githubusercontent.com/fogiznt/strongswan_proxy/main/proxy_manager.sh
 chmod +x ./proxy_manager.sh
