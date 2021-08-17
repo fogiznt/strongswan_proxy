@@ -20,8 +20,15 @@ local_port=$(shuf -i 7000-7255 -n 1)
 proxy_port=$(sed -n 5p /root/strong_proxy/settings.txt)
 proxy_port=${proxy_port##*=}
 proxy_port=$(shuf -i $proxy_port -n 1)
+speed=$(sed -n 6p /root/strong_proxy/settings.txt)
+speed=${speed##*=}
+speed=$(($speed*1024/40))
+
 
 docker run --name $user -d --net=host --privileged -e socks5 $image_id -a 0.0.0.0 -p $local_port -t $server_domain:$proxy_port
+tc class add dev eth0 parent 1: classid 1:$local_port htb rate $speedkbit quantum 3000
+tc filter add dev eth0 parent 1: protocol ip handle $local_port fw flowid 1:$local_port
+iptables -t mangle -I PREROUTING 1 -s $ip -j MARK --set-mark $local_port
 iptables -t nat -I PREROUTING 1 -s $ip -p tcp -j REDIRECT --to-ports $local_port
 
 touch /root/strong_proxy/killproxy_$user
@@ -33,8 +40,10 @@ docker rm $user
 iptables -t nat -D PREROUTING -s $ip -p tcp -j REDIRECT --to-ports $local_port
 rm -f /root/strong_proxy/killproxy_$user
 EOF
+
 chmod +x /root/strong_proxy/killproxy_$user
-/root/strong_proxy/killproxy_$user > /log.txt 2>&1 &
+/root/strong_proxy/killproxy_$user > /log.txt 2>&1 
+
 cat >>/var/www/html/clients << EOF
 $client_ip>>$ip:$local_port>>$server_domain:$proxy_port
 EOF
