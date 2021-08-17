@@ -45,6 +45,8 @@ echo "server_domain=$server_domain" >> /root/strong_proxy/settings.txt
 echo -e "${BLUE}Введите диапазон портов сервера\nК примеру - 10000-10298${DEFAULT}"
 read proxy_port_range
 echo "proxy_port_range=$proxy_port_range" >> /root/strong_proxy/settings.txt
+speed=30
+echo "speed=$speed">> /root/strong_proxy/settings.txt
 #### Загрузка управляющего скрипта
 wget https://raw.githubusercontent.com/fogiznt/strongswan_proxy/main/proxy_manager.sh
 chmod +x ./proxy_manager.sh
