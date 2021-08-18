@@ -58,8 +58,8 @@ user=$client_ip
 sed -i '2d' /root/strong_proxy/killproxy_$user
 /root/strong_proxy/killproxy_$user
 
-ip=$(echo /root/strong_proxy/ip_$client_ip)
-local_port=$(echo /root/strong_proxy/local_port_$client_ip)
+ip=$(cat /root/strong_proxy/ip_$client_ip)
+local_port=$(cat /root/strong_proxy/local_port_$client_ip)
 rm -f /root/strong_proxy/ip_$client_ip
 rm -f /root/strong_proxy/local_port_$client_ip
 
