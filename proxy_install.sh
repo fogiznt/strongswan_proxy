@@ -13,10 +13,7 @@ apt-get update
 apt-get install -y docker-ce
 
 ### Установка вспомогательных утилит
-apt install apache2
-apt install redsocks
-apt install zip
-apt install iptables-persistent
+apt install apache2 redsocks zip iptables-persistent -y
 netfilter-persistent-save
 
 ### Формирование образа Docker
