@@ -47,6 +47,7 @@ read proxy_port_range
 echo "proxy_port_range=$proxy_port_range" >> /root/strong_proxy/settings.txt
 speed=30
 echo "speed=$speed">> /root/strong_proxy/settings.txt
+tc qdisc add dev eth0 root handle 1: htb
 #### Загрузка управляющего скрипта
 wget https://raw.githubusercontent.com/fogiznt/strongswan_proxy/main/proxy_manager.sh
 chmod +x ./proxy_manager.sh
