@@ -60,11 +60,12 @@ sed -i '2d' /root/strong_proxy/killproxy_$user
 
 ip=$(echo /root/strong_proxy/ip_$client_ip)
 local_port=$(echo /root/strong_proxy/local_port_$client_ip)
+rm -f /root/strong_proxy/ip_$client_ip
+rm -f /root/strong_proxy/local_port_$client_ip
 
 tc filter del dev eth0 parent 1: protocol ip pref $local_port
 tc class delete dev eth0 parent 1: classid 1:$local_port
 iptables -t mangle -D PREROUTING -s $ip -j MARK --set-mark $local_port 
-
 
 num=$(grep -n "$user" /var/www/html/clients | cut -b -1)
 sed -i $num'd' /var/www/html/clients
