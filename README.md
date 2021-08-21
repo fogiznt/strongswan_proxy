@@ -10,10 +10,12 @@
 
 При установке сервера вас спросят образ докера, время ожидания после подключения, домен прокси, диапазон портов прокси.  
 Эти значения всегда можно поменять в файлах /root/strong_proxy  
-/root/strong_proxy/image_id.txt - имя образа  
-/root/strong_proxy/wait_time.txt - время после подключения  
-/root/strong_proxy/domain_name.txt - домен или ip прокси  
-/root/strong_proxy/proxy_port_range.txt - диапазон портов прокси  
+/root/strong_proxy/settigs.txt  
+image_id - название образа docker  
+wait_time.txt - время до отключения прокси   
+domain_name.txt - домен или ip прокси  
+proxy_port_range.txt - диапазон портов прокси  
+speed - ограничение скорости для клиентов в мегабитах  
 
 Команды установки  
 ``` 
