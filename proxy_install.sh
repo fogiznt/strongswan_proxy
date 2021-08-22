@@ -14,6 +14,7 @@ apt-get install -y docker-ce
 
 ### Установка вспомогательных утилит
 apt install apache2 redsocks zip iptables-persistent -y
+systemctl stop redsocks.service
 netfilter-persistent-save
 
 ### Формирование образа Docker
