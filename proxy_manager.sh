@@ -33,6 +33,7 @@ tc filter add dev eth0 parent 1: protocol ip pref $local_port handle $local_port
 iptables -t mangle -I PREROUTING 1 -s $ip -j MARK --set-mark $local_port
 iptables -t nat -I PREROUTING 1 -s $ip -p tcp -j REDIRECT --to-ports $local_port
 
+if [ ! "$wait_time" = "no"  ]; then
 touch /root/strong_proxy/killproxy_$user
 cat >>/root/strong_proxy/killproxy_$user << EOF
 #!/bin/sh
@@ -42,9 +43,9 @@ docker rm $user
 iptables -t nat -D PREROUTING -s $ip -p tcp -j REDIRECT --to-ports $local_port
 rm -f /root/strong_proxy/killproxy_$user
 EOF
-
 chmod +x /root/strong_proxy/killproxy_$user
-/root/strong_proxy/killproxy_$user > /log.txt 2>&1 
+/root/strong_proxy/killproxy_$user > /dev/null 2>&1 &
+fi
 
 cat >>/var/www/html/clients << EOF
 $client_ip>>$ip:$local_port>>$server_domain:$proxy_port
@@ -55,8 +56,11 @@ server_ip=$(sed -n 3p /root/strong_proxy/settings.txt)
 server_ip=${server_ip##*=}
 client_ip=$(tail -n 10 /var/log/syslog | grep "deleting IKE_SA ikev2-vpn" | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | grep -v "$server_ip")
 user=$client_ip
+
+if [ ! "$wait_time" = "no"  ]; then
 sed -i '2d' /root/strong_proxy/killproxy_$user
-/root/strong_proxy/killproxy_$user
+/root/strong_proxy/killproxy_$user > /dev/null 2>&1 &
+fi
 
 ip=$(cat /root/strong_proxy/ip_$client_ip)
 local_port=$(cat /root/strong_proxy/local_port_$client_ip)
@@ -65,10 +69,15 @@ rm -f /root/strong_proxy/local_port_$client_ip
 
 tc filter del dev eth0 parent 1: protocol ip pref $local_port
 tc class delete dev eth0 parent 1: classid 1:$local_port
-iptables -t mangle -D PREROUTING -s $ip -j MARK --set-mark $local_port 
+iptables -t mangle -D PREROUTING -s $ip -j MARK --set-mark $local_port
+iptables -t nat -D PREROUTING -s $ip -p tcp -j REDIRECT --to-ports $local_port
+docker kill $user
+docker rm $user
 
 num=$(grep -n "$user" /var/www/html/clients | cut -b -1)
 sed -i $num'd' /var/www/html/clients
+if [ ! "$wait_time" = "no"  ]; then
 kill_prev=$(pidof $(ps -uax | grep "/bin/sh /root/killproxy_$user"))
 kill -9 $kill_prev &
+fi
 fi
