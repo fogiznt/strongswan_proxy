@@ -13,7 +13,7 @@ apt-get update
 apt-get install -y docker-ce
 
 ### Установка вспомогательных утилит
-apt install apache2 redsocks zip iptables-persistent -y
+apt install redsocks zip iptables-persistent -y
 netfilter-persistent-save
 
 ### Формирование образа Docker
@@ -49,20 +49,4 @@ tc qdisc add dev eth0 root handle 1: htb
 wget https://raw.githubusercontent.com/fogiznt/strongswan_proxy/main/proxy_manager.sh
 chmod +x ./proxy_manager.sh
 echo "    leftupdown=/root/strong_proxy/proxy_manager.sh" >> /etc/ipsec.conf
-systemctl restart strongswan.service 
-#### Настройка apache2
-cd /var/www/html/
-touch clients
-rm index.html
-cat >>index.html <<EOF
-<!doctype html>
-<html >
-<head>
-  <meta charset="utf-8" />
-  <title></title>
-</head>
-<body>
- <a href="clients">Клиенты</a>
-</body>
-</html>
-EOF
+systemctl restart strongswan.service
